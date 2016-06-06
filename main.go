@@ -1,12 +1,12 @@
 package main
 
 import (
+	"encoding/gob"
 	"fenqiwanh5/lib"
-	//"fenqiwanh5/models"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
+	"github.com/beego/admin/src/models"
 	_ "monitor/routers"
-	_ "monitor/tasks"
 )
 
 //var redisx *lib.RedisxCache
@@ -23,8 +23,9 @@ func main() {
 		beego.BeeLogger.DelLogger("console")
 	}
 
-	//models.Connect()
 	lib.InitCacheManager()
 
+	gob.Register(models.User{})
+	gob.Register(make(map[string]bool))
 	beego.Run()
 }

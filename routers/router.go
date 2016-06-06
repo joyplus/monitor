@@ -11,6 +11,16 @@ func init() {
 	admin.Run()
 	beego.Router("/", &controllers.MainController{})
 
+	ns := beego.NewNamespace("/admin",
+
+		beego.NSNamespace("/order",
+			beego.NSInclude(
+				&controllers.FinOrderController{},
+			),
+		),
+	)
+	beego.AddNamespace(ns)
+
 	beego.Info("monitor start")
 
 }
