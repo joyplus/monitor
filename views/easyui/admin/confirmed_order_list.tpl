@@ -8,7 +8,7 @@
     $(function(){
         //角色列表
         $("#datagrid").datagrid({
-            title:'角色管理',
+            title:'支付完成订单列表',
             url:URL+"/GetAll",
             method:'GET',
             pagination:true,
@@ -18,12 +18,23 @@
             singleSelect:true,
             idField:'Id',
             columns:[[
-                {field:'Id',title:'ID',width:50,align:'center'},
-                {field:'Name',title:'组名',width:150,align:'center',editor:'text'},
+                {field:'Id',title:'ID',width:20,align:'left'},
+                {field:'OrderNumber',title:'订单号',width:80,align:'left',editor:'text'},
+                {field:'Name',title:'姓名',width:50,align:'center',editor:'text'},
+                {field:'MerchantName',title:'商户',width:50,align:'center',editor:'text'},
+                {field:'MerchantUserName',title:'商户用户名',width:50,align:'center',editor:'text'},
+                {field:'PrincipalBalance',title:'充值金额',width:50,align:'center',editor:'text'},
+                {field:'OrderTime',title:'支付时间',width:80,align:'center',editor:'text',
+                    formatter:function(value,row,index){
+                        var unixTimestamp = new Date(value);
+                        return unixTimestamp.toLocaleString();
+                    }
+                },
+
 
                 {field:'action',title:'操作',width:200,align:'center',
                     formatter:function(value,row,index){
-                        var c = '<a href="'+URL+'/AccessToNode?Id='+row.Id+'" target="_blank">充值成功</a> ';
+                        var c = '<a href="#" onclick="updateMerchantStatus();">充值成功</a> ';
                          return c;
                     }
                 }
@@ -99,24 +110,34 @@
             }
         });
     }
+
+    //更新状态
+    function updateMerchantStatus(){
+        $.messager.confirm('Confirm','是否确认完成订单?',function(r){
+            if (r){
+                var row = $("#datagrid").datagrid("getSelected");
+                if(! row){
+                    vac.alert("请选择订单");
+                    return;
+                }
+                vac.ajax(URL+'/ConfirmMerchantPay', {id:parseInt(row.Id)}, 'POST', function(r){
+                    if(r.status_code == 200){
+                        $("#datagrid").datagrid('reload');
+                    }else{
+                        vac.alert(r.message);
+                    }
+                })
+            }
+        });
+    }
 </script>
 <body>
 <table id="datagrid" toolbar="#tb"></table>
 <div id="tb" style="padding:5px;height:auto">
-    <a href="#" icon='icon-add' plain="true" onclick="addrow()" class="easyui-linkbutton" >新增</a>
-    <a href="#" icon='icon-edit' plain="true" onclick="editrow()" class="easyui-linkbutton" >编辑</a>
-    <a href="#" icon='icon-save' plain="true" onclick="saverow()" class="easyui-linkbutton" >保存</a>
-    <a href="#" icon='icon-cancel' plain="true" onclick="delrow()" class="easyui-linkbutton" >删除</a>
     <a href="#" icon='icon-reload' plain="true" onclick="reloadrow()" class="easyui-linkbutton" >刷新</a>
 </div>
 <!--表格内的右键菜单-->
 <div id="mm" class="easyui-menu" style="width:120px;display: none" >
-    <div iconCls='icon-add' onclick="addrow()">新增</div>
-    <div iconCls="icon-edit" onclick="editrow()">编辑</div>
-    <div iconCls='icon-save' onclick="saverow()">保存</div>
-    <div iconCls='icon-cancel' onclick="cancelrow()">取消</div>
-    <div class="menu-sep"></div>
-    <div iconCls='icon-cancel' onclick="delrow()">删除</div>
     <div iconCls='icon-reload' onclick="reloadrow()">刷新</div>
     <div class="menu-sep"></div>
     <div>Exit</div>

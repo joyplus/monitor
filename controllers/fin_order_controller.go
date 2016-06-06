@@ -3,16 +3,18 @@ package controllers
 import (
 	"encoding/json"
 	"errors"
+	"fenqiwanh5/lib"
 	"fenqiwanh5/models"
-	//"github.com/astaxie/beego"
-	"github.com/beego/admin/src/rbac"
+	"github.com/astaxie/beego"
+	dao "monitor/models"
+	"monitor/vo"
 	"strconv"
 	"strings"
 )
 
 // oprations for FinOrder
 type FinOrderController struct {
-	rbac.CommonController
+	BaseController
 }
 
 func (c *FinOrderController) URLMapping() {
@@ -22,6 +24,7 @@ func (c *FinOrderController) URLMapping() {
 	c.Mapping("Put", c.Put)
 	c.Mapping("Delete", c.Delete)
 	c.Mapping("ConfirmedList", c.ListConfirmedOrder)
+	c.Mapping("ConfirmMerchantPay", c.ConfirmMerchantPay)
 
 }
 
@@ -117,7 +120,7 @@ func (c *FinOrderController) GetAll() {
 		}
 	}
 
-	l, err := models.GetAllFinOrder(query, fields, sortby, order, offset, limit)
+	l, err := dao.GetConfirmedOrders(query, fields, sortby, order, offset, limit)
 	if err != nil {
 		c.Data["json"] = err.Error()
 	} else {
@@ -178,5 +181,34 @@ func (this *FinOrderController) ListConfirmedOrder() {
 		this.TplName = this.GetTemplatetype() + "/admin/confirmed_order_list.tpl"
 
 	}
+}
 
+// @Title Get
+// @Description get FinOrder by id
+// @Param	id		path 	string	true		"The key for staticblock"
+// @Success 200 {object} models.FinOrder
+// @Failure 403 :id is empty
+// @router /ConfirmMerchantPay [post]
+func (c *FinOrderController) ConfirmMerchantPay() {
+	//idStr := c.Ctx.Input.getInt("id")
+	//id, _ := strconv.Atoi(idStr)
+	req := new(vo.ReqOrder)
+	beego.Debug(string(c.Ctx.Input.RequestBody))
+	//err := json.Unmarshal(c.Ctx.Input.RequestBody, req)
+	err := c.ParseForm(req)
+	if err != nil {
+		err = &lib.SysError{
+			ErrorCode: lib.ERROR_JSON_UNMARSHAL_FAILED,
+		}
+
+	}
+
+	if err == nil {
+		err = dao.UpdateOrderMerchantStatus(req.Id, lib.LOV_MERCHANT_CONFIRMED)
+	}
+
+	res := c.HandleError(err)
+
+	c.Data["json"] = res
+	c.ServeJSON()
 }

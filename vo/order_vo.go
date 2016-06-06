@@ -14,3 +14,7 @@ type OrderVo struct {
 	MerchantName     string
 	OrderTime        time.Time
 }
+
+type ReqOrder struct {
+	Id int `form:"id"`
+}

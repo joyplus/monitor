@@ -48,4 +48,11 @@ func init() {
 			[]string{"get"},
 			nil})
 
+	beego.GlobalControllerRouter["monitor/controllers:FinOrderController"] = append(beego.GlobalControllerRouter["monitor/controllers:FinOrderController"],
+		beego.ControllerComments{
+			"ConfirmMerchantPay",
+			`/ConfirmMerchantPay`,
+			[]string{"post"},
+			nil})
+
 }
