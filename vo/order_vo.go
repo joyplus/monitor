@@ -5,14 +5,15 @@ import (
 )
 
 type OrderVo struct {
-	Id               int
-	OrderNumber      string
-	Name             string
-	MerchantUserName string
-	MobileNumber     string
-	PrincipalBalance float64
-	MerchantName     string
-	OrderTime        time.Time
+	Id                int
+	OrderNumber       string
+	Name              string
+	MerchantUserName  string
+	MobileNumber      string
+	PrincipalBalance  float64
+	MerchantName      string
+	OrderTime         time.Time
+	LovMerchantStatus int
 }
 
 type ReqOrder struct {

@@ -32,10 +32,14 @@
                 },
 
 
-                {field:'action',title:'操作',width:200,align:'center',
+                {field:'LovMerchantStatus',title:'操作',width:200,align:'center',
                     formatter:function(value,row,index){
-                        var c = '<a href="#" onclick="updateMerchantStatus();">充值成功</a> ';
-                         return c;
+
+
+                        var c = '<a href="#" onclick="updateMerchantStatus(\''+ index +'\')">充值成功</a> ';
+                        return c;
+
+
                     }
                 }
             ]],
@@ -56,9 +60,9 @@
                     }
                 })
             },
-            onDblClickRow:function(index,row){
-                editrow();
-            },
+//            onDblClickRow:function(index,row){
+//                editrow();
+//            },
             onRowContextMenu:function(e, index, row){
                 e.preventDefault();
                 $(this).datagrid("selectRow",index);
@@ -112,16 +116,19 @@
     }
 
     //更新状态
-    function updateMerchantStatus(){
-        $.messager.confirm('Confirm','是否确认完成订单?',function(r){
+    function updateMerchantStatus(index){
+        $.messager.confirm('Confirm','是否已经和商户确认完成订单充值?',function(r){
             if (r){
                 var row = $("#datagrid").datagrid("getSelected");
                 if(! row){
                     vac.alert("请选择订单");
                     return;
                 }
+
+                $("#datagrid").datagrid('deleteRow',index);
                 vac.ajax(URL+'/confirmmerchantpay', {id:parseInt(row.Id)}, 'POST', function(r){
                     if(r.status_code == 200){
+                        $("#datagrid").datagrid('deleteRow',index);
                         $("#datagrid").datagrid('reload');
                     }else{
                         vac.alert(r.message);
