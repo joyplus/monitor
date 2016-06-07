@@ -9,8 +9,8 @@
         //角色列表
         $("#datagrid").datagrid({
             title:'支付完成订单列表',
-            url:URL+"/GetAll",
-            method:'GET',
+            url:URL+"/getall",
+            method:'POST',
             pagination:true,
             fitColumns:true,
             striped:true,
@@ -19,12 +19,12 @@
             idField:'Id',
             columns:[[
                 {field:'Id',title:'ID',width:20,align:'left'},
-                {field:'OrderNumber',title:'订单号',width:80,align:'left',editor:'text'},
+                {field:'OrderNumber',title:'订单号',width:200,align:'left',editor:'text'},
                 {field:'Name',title:'姓名',width:50,align:'center',editor:'text'},
-                {field:'MerchantName',title:'商户',width:50,align:'center',editor:'text'},
-                {field:'MerchantUserName',title:'商户用户名',width:50,align:'center',editor:'text'},
-                {field:'PrincipalBalance',title:'充值金额',width:50,align:'center',editor:'text'},
-                {field:'OrderTime',title:'支付时间',width:80,align:'center',editor:'text',
+                {field:'MerchantName',title:'商户',width:100,align:'center',editor:'text'},
+                {field:'MerchantUserName',title:'商户用户名',width:89,align:'center',editor:'text'},
+                {field:'PrincipalBalance',title:'充值金额',width:60,align:'center',editor:'text'},
+                {field:'OrderTime',title:'支付时间',width:200,align:'center',editor:'text',
                     formatter:function(value,row,index){
                         var unixTimestamp = new Date(value);
                         return unixTimestamp.toLocaleString();
@@ -120,7 +120,7 @@
                     vac.alert("请选择订单");
                     return;
                 }
-                vac.ajax(URL+'/ConfirmMerchantPay', {id:parseInt(row.Id)}, 'POST', function(r){
+                vac.ajax(URL+'/confirmmerchantpay', {id:parseInt(row.Id)}, 'POST', function(r){
                     if(r.status_code == 200){
                         $("#datagrid").datagrid('reload');
                     }else{

@@ -1,14 +1,14 @@
 package controllers
 
 import (
-	"encoding/json"
+	//"encoding/json"
 	"errors"
 	"fenqiwanh5/lib"
-	"fenqiwanh5/models"
+	//"fenqiwanh5/models"
 	"github.com/astaxie/beego"
 	dao "monitor/models"
 	"monitor/vo"
-	"strconv"
+	//"strconv"
 	"strings"
 )
 
@@ -18,13 +18,13 @@ type FinOrderController struct {
 }
 
 func (c *FinOrderController) URLMapping() {
-	c.Mapping("Post", c.Post)
-	c.Mapping("GetOne", c.GetOne)
-	c.Mapping("GetAll", c.GetAll)
-	c.Mapping("Put", c.Put)
-	c.Mapping("Delete", c.Delete)
-	c.Mapping("ConfirmedList", c.ListConfirmedOrder)
-	c.Mapping("ConfirmMerchantPay", c.ConfirmMerchantPay)
+	//c.Mapping("Post", c.Post)
+	//c.Mapping("GetOne", c.GetOne)
+	c.Mapping("getall", c.GetAll)
+	//c.Mapping("Put", c.Put)
+	//c.Mapping("Delete", c.Delete)
+	c.Mapping("confirmedlist", c.ListConfirmedOrder)
+	c.Mapping("confirmmerchantpay", c.ConfirmMerchantPay)
 
 }
 
@@ -34,20 +34,20 @@ func (c *FinOrderController) URLMapping() {
 // @Success 201 {int} models.FinOrder
 // @Failure 403 body is empty
 // @router / [post]
-func (c *FinOrderController) Post() {
-	var v models.FinOrder
-	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
-		if _, err := models.AddFinOrder(&v); err == nil {
-			c.Ctx.Output.SetStatus(201)
-			c.Data["json"] = v
-		} else {
-			c.Data["json"] = err.Error()
-		}
-	} else {
-		c.Data["json"] = err.Error()
-	}
-	c.ServeJSON()
-}
+//func (c *FinOrderController) Post() {
+//	var v models.FinOrder
+//	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
+//		if _, err := models.AddFinOrder(&v); err == nil {
+//			c.Ctx.Output.SetStatus(201)
+//			c.Data["json"] = v
+//		} else {
+//			c.Data["json"] = err.Error()
+//		}
+//	} else {
+//		c.Data["json"] = err.Error()
+//	}
+//	c.ServeJSON()
+//}
 
 // @Title Get
 // @Description get FinOrder by id
@@ -55,17 +55,17 @@ func (c *FinOrderController) Post() {
 // @Success 200 {object} models.FinOrder
 // @Failure 403 :id is empty
 // @router /:id [get]
-func (c *FinOrderController) GetOne() {
-	idStr := c.Ctx.Input.Param(":id")
-	id, _ := strconv.Atoi(idStr)
-	v, err := models.GetFinOrderById(id)
-	if err != nil {
-		c.Data["json"] = err.Error()
-	} else {
-		c.Data["json"] = v
-	}
-	c.ServeJSON()
-}
+//func (c *FinOrderController) GetOne() {
+//	idStr := c.Ctx.Input.Param(":id")
+//	id, _ := strconv.Atoi(idStr)
+//	v, err := models.GetFinOrderById(id)
+//	if err != nil {
+//		c.Data["json"] = err.Error()
+//	} else {
+//		c.Data["json"] = v
+//	}
+//	c.ServeJSON()
+//}
 
 // @Title Get All
 // @Description get FinOrder
@@ -77,7 +77,7 @@ func (c *FinOrderController) GetOne() {
 // @Param	offset	query	string	false	"Start position of result set. Must be an integer"
 // @Success 200 {object} models.FinOrder
 // @Failure 403
-// @router /GetAll
+// @router /getall [post]
 func (c *FinOrderController) GetAll() {
 	var fields []string
 	var sortby []string
@@ -136,21 +136,21 @@ func (c *FinOrderController) GetAll() {
 // @Success 200 {object} models.FinOrder
 // @Failure 403 :id is not int
 // @router /:id [put]
-func (c *FinOrderController) Put() {
-	idStr := c.Ctx.Input.Param(":id")
-	id, _ := strconv.Atoi(idStr)
-	v := models.FinOrder{Id: id}
-	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
-		if err := models.UpdateFinOrderById(&v); err == nil {
-			c.Data["json"] = "OK"
-		} else {
-			c.Data["json"] = err.Error()
-		}
-	} else {
-		c.Data["json"] = err.Error()
-	}
-	c.ServeJSON()
-}
+//func (c *FinOrderController) Put() {
+//	idStr := c.Ctx.Input.Param(":id")
+//	id, _ := strconv.Atoi(idStr)
+//	v := models.FinOrder{Id: id}
+//	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
+//		if err := models.UpdateFinOrderById(&v); err == nil {
+//			c.Data["json"] = "OK"
+//		} else {
+//			c.Data["json"] = err.Error()
+//		}
+//	} else {
+//		c.Data["json"] = err.Error()
+//	}
+//	c.ServeJSON()
+//}
 
 // @Title Delete
 // @Description delete the FinOrder
@@ -158,22 +158,22 @@ func (c *FinOrderController) Put() {
 // @Success 200 {string} delete success!
 // @Failure 403 id is empty
 // @router /:id [delete]
-func (c *FinOrderController) Delete() {
-	idStr := c.Ctx.Input.Param(":id")
-	id, _ := strconv.Atoi(idStr)
-	if err := models.DeleteFinOrder(id); err == nil {
-		c.Data["json"] = "OK"
-	} else {
-		c.Data["json"] = err.Error()
-	}
-	c.ServeJSON()
-}
+//func (c *FinOrderController) Delete() {
+//	idStr := c.Ctx.Input.Param(":id")
+//	id, _ := strconv.Atoi(idStr)
+//	if err := models.DeleteFinOrder(id); err == nil {
+//		c.Data["json"] = "OK"
+//	} else {
+//		c.Data["json"] = err.Error()
+//	}
+//	c.ServeJSON()
+//}
 
 // @Title Get confirmed order list
 // @Description get FinOrder
 // @Success 200 {object} models.FinOrder
 // @Failure 403
-// @router /ConfirmedList
+// @router /confirmedlist
 func (this *FinOrderController) ListConfirmedOrder() {
 	if this.IsAjax() {
 		return
@@ -188,7 +188,7 @@ func (this *FinOrderController) ListConfirmedOrder() {
 // @Param	id		path 	string	true		"The key for staticblock"
 // @Success 200 {object} models.FinOrder
 // @Failure 403 :id is empty
-// @router /ConfirmMerchantPay [post]
+// @router /confirmmerchantpay [post]
 func (c *FinOrderController) ConfirmMerchantPay() {
 	//idStr := c.Ctx.Input.getInt("id")
 	//id, _ := strconv.Atoi(idStr)
