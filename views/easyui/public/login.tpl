@@ -46,7 +46,7 @@ var SubmitOrHidden = function(evt){
 window.document.onkeydown=SubmitOrHidden;//当有键按下时执行函数
 </script>
 <body>
-<div style="text-align:center;margin:0 auto;width:350px;height:250px;" id="dialog" title="登录">
+<div style="text-align:center;margin:0 auto;width:350px;height:250px;" id="dialog" title="链资中台管理系统">
 <div style="padding:20px 20px 20px 40px;" >
 <form id="form" method="post">
 <table >
