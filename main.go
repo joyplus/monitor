@@ -7,6 +7,7 @@ import (
 	"github.com/astaxie/beego/orm"
 	"github.com/beego/admin/src/models"
 	_ "monitor/routers"
+	_ "monitor/tasks"
 )
 
 //var redisx *lib.RedisxCache
@@ -27,5 +28,8 @@ func main() {
 
 	gob.Register(models.User{})
 	gob.Register(make(map[string]bool))
+
+	//mlib.SendNotifyMail2()
+
 	beego.Run()
 }

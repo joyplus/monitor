@@ -3,77 +3,64 @@ package tasks
 import (
 	"fenqiwanh5/lib"
 	//"fenqiwanh5/models"
-	"github.com/astaxie/beego"
-	//"github.com/astaxie/beego/toolbox"
-	monitorModels "monitor/models"
-	"time"
 	//"fmt"
+	"github.com/astaxie/beego"
+	monitorModels "monitor/models"
+	"monitor/vo"
+	"time"
 )
 
-//前6个字段分别表示：
-//       秒钟：0-59
-//       分钟：0-59
-//       小时：1-23
-//       日期：1-31
-//       月份：1-12
-//       星期：0-6（0 表示周日）
+func CheckOrder() (err error) {
 
-//还可以用一些特殊符号：
-//       *： 表示任何时刻
-//       ,：　表示分割，如第三段里：2,4，表示 2 点和 4 点执行
-//　　    －：表示一个段，如第三端里： 1-5，就表示 1 到 5 点
-//       /n : 表示每个n的单位执行一次，如第三段里，*/1, 就表示每隔 1 个小时执行一次命令。也可以写成1-23/1.
-/////////////////////////////////////////////////////////
-//  0/30 * * * * *                        每 30 秒 执行
-//  0 43 21 * * *                         21:43 执行
-//  0 15 05 * * * 　　                     05:15 执行
-//  0 0 17 * * *                          17:00 执行
-//  0 0 17 * * 1                          每周一的 17:00 执行
-//  0 0,10 17 * * 0,2,3                   每周日,周二,周三的 17:00和 17:10 执行
-//  0 0-10 17 1 * *                       毎月1日从 17:00 到 7:10 毎隔 1 分钟 执行
-//  0 0 0 1,15 * 1                        毎月1日和 15 日和 一日的 0:00 执行
-//  0 42 4 1 * * 　 　                     毎月1日的 4:42 分 执行
-//  0 0 21 * * 1-6　　                     周一到周六 21:00 执行
-//  0 0,10,20,30,40,50 * * * *　           每隔 10 分 执行
-//  0 */10 * * * * 　　　　　　              每隔 10 分 执行
-//  0 * 1 * * *　　　　　　　　               从 1:0 到 1:59 每隔 1 分钟 执行
-//  0 0 1 * * *　　　　　　　　               1:00 执行
-//  0 0 */1 * * *　　　　　　　               毎时 0 分 每隔 1 小时 执行
-//  0 0 * * * *　　　　　　　　               毎时 0 分 每隔 1 小时 执行
-//  0 2 8-20/3 * * *　　　　　　             8:02,11:02,14:02,17:02,20:02 执行
-//  0 30 5 1,15 * *　　　　　　              1 日 和 15 日的 5:30 执行
+	beego.Debug("Check order for notification")
+	GetTargetOrders()
 
-func init() {
-
-	//tkCheckPersonLiability := toolbox.NewTask("tkCheckOrder", "0/5 * * * * *", checkOrder)
-	//toolbox.AddTask("tkCheckOrder", tkCheckPersonLiability)
-
-	//toolbox.StartTask()
-
+	return
 }
 
-func checkOrder() (err error) {
+//func ParseOrderTime(strOrderTime string) (updateTime time.Time, err error) {
+//	updateTime, err = time.Parse("2006-01-02 15:04:05", "2016-04-17 02:11:12")
+//	//if err == nil {
+//	//	periodStart := updateTime.Add(time.Minute * 5)
 
-	beego.Debug("Check order")
+//	//	if periodStart.Before(time.Now()) {
 
-	var lastScanTime string
+//	//	}
+//	//}
+//	return
+//}
 
-	tmpLastScanTime := lib.CacheManager.Get("scanOrderTime")
-	currentTime := time.Now().Format("2006-01-02 15:04:05")
+//订单完成时间超过5分钟，小于12分钟
+func GetPeroid(orderTime time.Time) (start time.Time, end time.Time) {
 
-	if tmpLastScanTime != nil {
-		lastScanTime = tmpLastScanTime.(string)
-	} else {
-		tmpLastScanTime = currentTime
+	return orderTime.Add(time.Minute * 1), orderTime.Add(time.Minute * 10)
+}
+
+func GetTargetOrders() (aryOrders []vo.OrderVo, err error) {
+
+	orderStatus := lib.LOV_ORDER_PAY_CONFIRM
+	merchantStatus := lib.LOV_MERCHANT_PENDING
+
+	var orders []vo.OrderVo
+	orders, err = monitorModels.GetOrdersByStatus(orderStatus, merchantStatus)
+
+	aryOrders = make([]vo.OrderVo, len(orders))
+	currentTime := time.Now()
+
+	index := 0
+	notifyFlg := false
+	for _, orderVo := range orders {
+		start, end := GetPeroid(orderVo.OrderTime)
+
+		if currentTime.After(start) && currentTime.Before(end) {
+			notifyFlg = true
+			aryOrders[index] = orderVo
+			index++
+		}
 	}
 
-	lib.CacheManager.Put("scanOrderTime", currentTime, 60*time.Minute)
-
-	orders, err := monitorModels.GetOrdersByStatus(lib.LOV_ORDER_PAY_CONFIRM, lastScanTime)
-
-	if err == nil {
-		beego.Debug(orders)
-
+	if notifyFlg {
+		SendNotifyMail(aryOrders)
 	}
 	return
 }

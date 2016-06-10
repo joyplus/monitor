@@ -16,7 +16,7 @@ func Test_GetOrdersByStatus(t *testing.T) {
 
 		lastOrder := rst[len(rst)-1]
 
-		So(lastOrder.OrderNumber, ShouldEqual, "TRX2016053114503990082")
+		So(lastOrder.OrderNumber, ShouldEqual, "TRX14652808551888441566")
 	})
 
 }

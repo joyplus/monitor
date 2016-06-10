@@ -23,7 +23,7 @@ func MockDBConnect() {
 	db_port := "8889"
 	db_user := "root"
 	db_pass := "root"
-	db_name := "fenqiwan"
+	db_name := "fenqiwan_ci"
 	db_path := ""
 	db_sslmode := ""
 	switch db_type {
