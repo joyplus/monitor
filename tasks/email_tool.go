@@ -55,6 +55,7 @@ func GetEmailBody(aryOrders []vo.OrderVo) (emailBody string, err error) {
 					<td>平台名</td>
 					<td>平台ID</td>
 					<td>姓名</td>
+					<td>商品名称</td>
 					<td>充值金额</td>
 					<td>充值时间</td>
 				</tr>
@@ -68,6 +69,7 @@ func GetEmailBody(aryOrders []vo.OrderVo) (emailBody string, err error) {
 			strLine = strings.Replace(strLine, "平台名", orderVo.MerchantName, 1)
 			strLine = strings.Replace(strLine, "平台ID", orderVo.MerchantUserName, 1)
 			strLine = strings.Replace(strLine, "姓名", orderVo.Name, 1)
+			strLine = strings.Replace(strLine, "商品名称", orderVo.ProductName, 1)
 			strPrincipalBalance := strconv.FormatFloat(orderVo.PrincipalBalance, 'f', 0, 64)
 			strLine = strings.Replace(strLine, "充值金额", strPrincipalBalance+"元", 1)
 			strLine = strings.Replace(strLine, "充值时间", orderVo.OrderTime.Format("2006-01-02 15:04:05"), 1)
@@ -84,6 +86,7 @@ func GetEmailBody(aryOrders []vo.OrderVo) (emailBody string, err error) {
 					<th>平台</th>
 					<th>平台ID</th>
 					<th>姓名</th>
+					<th>商品名称</th>
 					<th>充值金额</th>
 					<th>充值时间</th>
 				</tr>

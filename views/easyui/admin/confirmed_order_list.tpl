@@ -22,6 +22,7 @@
                 {field:'OrderNumber',title:'订单号',width:200,align:'left',editor:'text'},
                 {field:'Name',title:'姓名',width:50,align:'center',editor:'text'},
                 {field:'MerchantName',title:'商户',width:100,align:'center',editor:'text'},
+                {field:'ProductName',title:'商品名',width:150,align:'center',editor:'text'},
                 {field:'MerchantUserName',title:'商户用户名',width:89,align:'center',editor:'text'},
                 {field:'PrincipalBalance',title:'充值金额',width:60,align:'center',editor:'text'},
                 {field:'OrderTime',title:'支付时间',width:200,align:'center',editor:'text',

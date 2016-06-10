@@ -10,6 +10,7 @@ type OrderVo struct {
 	Name              string
 	MerchantUserName  string
 	MobileNumber      string
+	ProductName       string
 	PrincipalBalance  float64
 	MerchantName      string
 	OrderTime         time.Time
