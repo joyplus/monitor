@@ -30,7 +30,7 @@ func CheckOrder() (err error) {
 //	return
 //}
 
-//订单完成时间超过5分钟，小于12分钟
+//订单完成时间超过1分钟，小于10分钟
 func GetPeroid(orderTime time.Time) (start time.Time, end time.Time) {
 
 	return orderTime.Add(time.Minute * 1), orderTime.Add(time.Minute * 10)

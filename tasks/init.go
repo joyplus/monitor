@@ -38,12 +38,23 @@ import (
 //  0 2 8-20/3 * * *　　　　　　             8:02,11:02,14:02,17:02,20:02 执行
 //  0 30 5 1,15 * *　　　　　　              1 日 和 15 日的 5:30 执行
 
+var _MockOTP bool
+
 func init() {
+	_MockOTP, _ = beego.AppConfig.Bool("mock_otp")
 
 	orderDuration := beego.AppConfig.String("duration_check_order")
+	paymentDuration := beego.AppConfig.String("duration_check_payment")
 
-	tkCheckPersonLiability := toolbox.NewTask("tkCheckOrder", orderDuration, CheckOrder)
-	toolbox.AddTask("tkCheckOrder", tkCheckPersonLiability)
+	if len(orderDuration) > 0 {
+		tkCheckPersonLiability := toolbox.NewTask("tkCheckOrder", orderDuration, CheckOrder)
+		toolbox.AddTask("tkCheckOrder", tkCheckPersonLiability)
+	}
+
+	if len(paymentDuration) > 0 {
+		tkPaymentNotification := toolbox.NewTask("tkPaymentNotification", paymentDuration, CheckPayments4Notification)
+		toolbox.AddTask("tkPaymentNotification", tkPaymentNotification)
+	}
 
 	toolbox.StartTask()
 

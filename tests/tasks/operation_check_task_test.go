@@ -35,34 +35,34 @@ func Test_GetPeroid(t *testing.T) {
 
 }
 
-func Test_GetTargetOrders(t *testing.T) {
+//func Test_GetTargetOrders(t *testing.T) {
 
-	Convey("返回需要发送通知的订单(id=43)", t, func() {
+//	Convey("返回需要发送通知的订单(id=43)", t, func() {
 
-		orders, err := tasks.GetTargetOrders()
+//		orders, err := tasks.GetTargetOrders()
 
-		So(err, ShouldBeNil)
-		t.Logf("order number:%s", orders[0].OrderNumber)
+//		So(err, ShouldBeNil)
+//		t.Logf("order number:%s", orders[0].OrderNumber)
 
-	})
+//	})
 
-}
+//}
 
-func Test_GetEmailBody(t *testing.T) {
+//func Test_GetEmailBody(t *testing.T) {
 
-	Convey("生成通知email body", t, func() {
+//	Convey("生成通知email body", t, func() {
 
-		orders, err := tasks.GetTargetOrders()
+//		orders, err := tasks.GetTargetOrders()
 
-		So(err, ShouldBeNil)
-		t.Logf("order number:%s", orders[0].OrderNumber)
+//		So(err, ShouldBeNil)
+//		t.Logf("order number:%s", orders[0].OrderNumber)
 
-		emailBody, _ := tasks.GetEmailBody(orders)
-		t.Logf(emailBody)
+//		emailBody, _ := tasks.GetEmailBody(orders)
+//		t.Logf(emailBody)
 
-	})
+//	})
 
-}
+//}
 
 //func Test_SendNotifyMail(t *testing.T) {
 
