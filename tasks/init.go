@@ -40,11 +40,19 @@ import (
 
 var _MockOTP bool
 
+var TplIdYuqiNotify string
+var TplIdHuankuanNotify string
+
 func init() {
+	//初始化模板
+	setSmsTplIds()
+
 	_MockOTP, _ = beego.AppConfig.Bool("mock_otp")
 
 	orderDuration := beego.AppConfig.String("duration_check_order")
 	paymentDuration := beego.AppConfig.String("duration_check_payment")
+
+	paymentProcessDuration := beego.AppConfig.String("duration_process_payment")
 
 	if len(orderDuration) > 0 {
 		tkCheckPersonLiability := toolbox.NewTask("tkCheckOrder", orderDuration, CheckOrder)
@@ -56,6 +64,16 @@ func init() {
 		toolbox.AddTask("tkPaymentNotification", tkPaymentNotification)
 	}
 
+	if len(paymentProcessDuration) > 0 {
+		tkPaymentProcess := toolbox.NewTask("tkPaymentProcess", paymentProcessDuration, ProcessPayments)
+		toolbox.AddTask("tkPaymentProcess", tkPaymentProcess)
+	}
+
 	toolbox.StartTask()
 
+}
+
+func setSmsTplIds() {
+	TplIdYuqiNotify = beego.AppConfig.String("tpl_id_yuqi_notify")
+	TplIdHuankuanNotify = beego.AppConfig.String("tpl_id_huankuan_notify")
 }
