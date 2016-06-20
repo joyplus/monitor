@@ -21,3 +21,15 @@ func Test_GetPaymentsByDate(t *testing.T) {
 	})
 
 }
+
+func Test_CalcDuration(t *testing.T) {
+
+	Convey("计算日期间隔2016-06-23到2016-06-28", t, func() {
+
+		duration, err := models.CalcDuration("2016-06-23", "2016-06-28")
+
+		So(err, ShouldBeEmpty)
+		So(duration, ShouldEqual, 5)
+	})
+
+}
