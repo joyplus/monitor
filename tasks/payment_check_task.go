@@ -13,25 +13,65 @@ import (
 //func init() {
 //	CheckPayments4Notification()
 //}
-
+//查询账单并发送通知
 func CheckPayments4Notification() (err error) {
 
 	beego.Debug("Check payment for notification")
+	err = SendPaymentNotification()
 
-	currentTime := time.Now()
-	paymentTime := currentTime.Add(time.Hour * 48)
-	strPaymentTime := paymentTime.Format("2006-01-02")
+	if err != nil {
+		beego.Error(err.Error())
+		lib.TasksLog.Error(err.Error())
+	}
 
-	aryPayments, _ := GetPendingPayments(strPaymentTime)
+	err = SendOverduePaymentNotification()
+
+	if err != nil {
+		beego.Error(err.Error())
+		lib.TasksLog.Error(err.Error())
+	}
+
+	return
+}
+
+func SendPaymentNotification() (err error) {
+
+	beego.Debug("Send notification for payments")
+	var aryPayments []vo.PaymentVo
+	aryPayments, err = GetPendingPayments()
 	for _, paymentVo := range aryPayments {
 		go sendPaymentNotificationBySMS(paymentVo, TplIdHuankuanNotify)
 	}
 	return
 }
 
-func GetPendingPayments(strPaymentTime string) (aryPayments []vo.PaymentVo, err error) {
+//查询一天后到期的账单
+func GetPendingPayments() (aryPayments []vo.PaymentVo, err error) {
 
-	aryPayments, err = monitorModels.GetPaymentsByDate(strPaymentTime)
+	currentTime := time.Now()
+	paymentTime := currentTime.Add(time.Hour * 24)
+	strPaymentDate := paymentTime.Format("2006-01-02")
+
+	aryPayments, err = monitorModels.GetPaymentsByDate(strPaymentDate, lib.LOV_PAYMENT_PAY_NORMAL)
+
+	return
+}
+
+func SendOverduePaymentNotification() (err error) {
+
+	beego.Debug("Send notification for overdue payments")
+	var aryPayments []vo.PaymentVo
+	aryPayments, err = GetOverduePayments()
+	for _, paymentVo := range aryPayments {
+		go sendPaymentNotificationBySMS(paymentVo, TplIdYuqiNotify)
+	}
+	return
+}
+
+//查询已经逾期的账单
+func GetOverduePayments() (aryPayments []vo.PaymentVo, err error) {
+
+	aryPayments, err = monitorModels.GetOverduePayments()
 
 	return
 }
@@ -65,9 +105,13 @@ func sendPaymentNotificationBySMS(paymentVo vo.PaymentVo, tplId string) (err err
 	return
 }
 
+//更新账单通知
 func ProcessPayments() (err error) {
-	go UpdateOverduePayments()
-	go UpdatePBDPayments()
+	beego.Debug("Start to process payments")
+
+	UpdateOverduePayments()
+	UpdatePBDPayments()
+	UpdatePaymentOverdueFine()
 	return
 }
 
@@ -101,6 +145,22 @@ func UpdatePBDPayments() (err error) {
 	strLast30Day := last30Day.Format("2006-01-02")
 
 	err = monitorModels.UpdatePBDPayments(strLast30Day)
+
+	if err != nil {
+		beego.Error(err.Error())
+		lib.TasksLog.Error(err.Error())
+	}
+
+	return
+}
+
+func UpdatePaymentOverdueFine() (err error) {
+
+	beego.Debug("Update payment overdue fine")
+
+	strToday := time.Now().Format("2006-01-02")
+
+	err = monitorModels.UpdatePaymentOverdueFine(strToday)
 
 	if err != nil {
 		beego.Error(err.Error())

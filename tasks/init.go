@@ -53,17 +53,18 @@ func init() {
 	paymentDuration := beego.AppConfig.String("duration_check_payment")
 
 	paymentProcessDuration := beego.AppConfig.String("duration_process_payment")
-
+	//支付未处理订单通知运营
 	if len(orderDuration) > 0 {
 		tkCheckPersonLiability := toolbox.NewTask("tkCheckOrder", orderDuration, CheckOrder)
 		toolbox.AddTask("tkCheckOrder", tkCheckPersonLiability)
 	}
-
+	//待支付账单和逾期通知用户付款
 	if len(paymentDuration) > 0 {
 		tkPaymentNotification := toolbox.NewTask("tkPaymentNotification", paymentDuration, CheckPayments4Notification)
 		toolbox.AddTask("tkPaymentNotification", tkPaymentNotification)
 	}
 
+	//逾期账单状态和罚金更新
 	if len(paymentProcessDuration) > 0 {
 		tkPaymentProcess := toolbox.NewTask("tkPaymentProcess", paymentProcessDuration, ProcessPayments)
 		toolbox.AddTask("tkPaymentProcess", tkPaymentProcess)
