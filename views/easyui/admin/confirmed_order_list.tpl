@@ -150,9 +150,6 @@
     <div class="menu-sep"></div>
     <div>Exit</div>
 </div>
-<!--表头的右键菜单-->
-<div id="mm1" class="easyui-menu" style="width:120px;display: none"  >
-    <div icon='icon-add' onclick="addrow()">新增</div>
-</div>
+
 </body>
 </html>

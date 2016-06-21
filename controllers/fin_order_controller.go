@@ -23,8 +23,12 @@ func (c *FinOrderController) URLMapping() {
 	c.Mapping("getall", c.GetAll)
 	//c.Mapping("Put", c.Put)
 	//c.Mapping("Delete", c.Delete)
+
 	c.Mapping("confirmedlist", c.ListConfirmedOrder)
 	c.Mapping("confirmmerchantpay", c.ConfirmMerchantPay)
+
+	c.Mapping("getfinishedorders", c.GetFinishedOrders)
+	c.Mapping("finishedlist", c.ListFinishedOrder)
 
 }
 
@@ -210,5 +214,42 @@ func (c *FinOrderController) ConfirmMerchantPay() {
 	res := c.HandleError(err)
 
 	c.Data["json"] = res
+	c.ServeJSON()
+}
+
+// @Title Get confirmed order list
+// @Description get FinOrder
+// @Success 200 {object} models.FinOrder
+// @Failure 403
+// @router /finishedlist
+func (this *FinOrderController) ListFinishedOrder() {
+	if this.IsAjax() {
+		return
+	} else {
+		this.TplName = this.GetTemplatetype() + "/admin/finished_order_list.tpl"
+
+	}
+}
+
+//获得支付完成且商户充值完成的订单列表
+// @Title Get GetFinishedOrders
+// @Description get GetFinishedOrders
+// @Success 200 {object} models.FinOrder
+// @Failure 403
+// @router /getfinishedorders [post]
+func (c *FinOrderController) GetFinishedOrders() {
+
+	orderStatus := lib.LOV_ORDER_PAY_CONFIRM
+	merchantStatus := lib.LOV_MERCHANT_CONFIRMED
+
+	l, err := dao.GetOrdersByStatus(orderStatus, merchantStatus)
+
+	if err != nil {
+		c.Data["json"] = c.HandleError(err)
+
+	} else {
+		c.Data["json"] = l
+	}
+
 	c.ServeJSON()
 }
