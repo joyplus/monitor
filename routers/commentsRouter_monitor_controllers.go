@@ -27,4 +27,18 @@ func init() {
 			[]string{"post"},
 			nil})
 
+	beego.GlobalControllerRouter["monitor/controllers:FinOrderController"] = append(beego.GlobalControllerRouter["monitor/controllers:FinOrderController"],
+		beego.ControllerComments{
+			"ListFinishedOrder",
+			`/finishedlist`,
+			[]string{"get"},
+			nil})
+
+	beego.GlobalControllerRouter["monitor/controllers:FinOrderController"] = append(beego.GlobalControllerRouter["monitor/controllers:FinOrderController"],
+		beego.ControllerComments{
+			"GetFinishedOrders",
+			`/getfinishedorders`,
+			[]string{"post"},
+			nil})
+
 }
