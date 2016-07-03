@@ -2,6 +2,7 @@ package tasks
 
 import (
 	"fenqiwanh5/lib"
+	"fmt"
 	"github.com/astaxie/beego"
 	monitorModels "monitor/models"
 	"monitor/vo"
@@ -91,14 +92,15 @@ func sendPaymentNotificationBySMS(paymentVo vo.PaymentVo, tplId string) (err err
 					ErrorCode:    lib.ERROR_SMS_SENT_FAILED,
 					ErrorMessage: rst["statusMsg"].(string),
 				}
-			} else {
-				lib.TasksLog.Info("")
 			}
 		}
 
 		if err != nil {
 			beego.Error(err.Error())
 			lib.TasksLog.Error(err.Error())
+		} else {
+			lib.TasksLog.Info(fmt.Sprintf("Sent sms, tplId:%s, name:%s", tplId, paymentVo.Name))
+
 		}
 	}
 
