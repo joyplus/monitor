@@ -48,6 +48,9 @@
 
     //刷新
     function reloadrow(){
+		// clear the datagrid
+		$('#datagrid').datagrid('loadData', {"total":0,"rows":[]});
+		
 		var paymentStatusVal = $("#paymentstatusid").combobox('getValue');
 		var delayStatusVal = $("#delaystatusid").combobox('getValue');
         $("#datagrid").datagrid("reload", {paymentStatus:paymentStatusVal, delayStatus:delayStatusVal});
