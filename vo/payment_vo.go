@@ -14,9 +14,9 @@ type PaymentVo struct {
 	PaymentAmount    float64
 	PaymentStage     int
 	LovPaymentStatus int
-	LovPaymentStatusStr string
+	PaymentStatus string
 	MerchantUserName string
 	DelayPaymentFine float32
 	LovDelayStatus int
-	LovDelayStatusStr string
+	DelayStatus string
 }

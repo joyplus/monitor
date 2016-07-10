@@ -27,8 +27,8 @@
 				},
                 {field:'DelayPaymentFine',title:'罚金(￥)',width:100,align:'center',editor:'text'},
                 {field:'MobileNumber',title:'手机号码',width:60,align:'center',editor:'text'},
-                {field:'LovPaymentStatusStr',title:'支付状态',width:50,align:'center',editor:'text'},
-				{field:'LovDelayStatusStr',title:'逾期状态',width:50,align:'center',editor:'text'}
+                {field:'PaymentStatus',title:'支付状态',width:50,align:'center',editor:'text'},
+				{field:'DelayStatus',title:'逾期状态',width:50,align:'center',editor:'text'}
             ]],
 
             onRowContextMenu:function(e, index, row){
@@ -42,8 +42,8 @@
           
         });
 
-
-
+		$('#paymentstatusid').combobox('setValue', -1);
+		$('#delaystatusid').combobox('setValue', -1);
     });
 
     //刷新
@@ -64,20 +64,11 @@
 <div id="tb" style="padding:5px;height:auto">
 	<table><tr>
                     <td>
-                        <select id="paymentstatusid" class="easyui-combobox" style="width:150px;" editable=false panelHeight='auto'>
-							<option value="-1">不限</option>
-							<option value="0">待支付</option>
-							<option value="1">支付完成</option>
-						</select>
+						<div style="float:right"><input id="paymentstatusid" class="easyui-combobox" data-options="valueField:'LovId',textField:'LovValue',url:'/admin/payment/paymentstatus', panelHeight:'auto'" editable=false></div>                       
                     </td>
 					
                     <td>
-                        <select id="delaystatusid" class="easyui-combobox" style="width:150px;" editable=false panelHeight='auto'>
-							<option value="-1">不限</option>
-							<option value="0">正常</option>
-							<option value="1">逾期少于30天</option>
-							<option value="2">逾期大于30天</option>
-						</select>
+                        <div style="float:right"><input id="delaystatusid" class="easyui-combobox" data-options="valueField:'LovId',textField:'LovValue',url:'/admin/payment/delaystatus', panelHeight:'auto'" editable=false></div>
                     </td>
 					<td><a href="#" icon='icon-reload' plain="true" onclick="reloadrow()" class="easyui-linkbutton" >刷新</a></td>
             </tr>

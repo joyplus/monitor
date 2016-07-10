@@ -17,6 +17,9 @@ type FinPaymentController struct {
 	BaseController
 }
 
+const LOV_KEY_PAYMENT_STATUS string = "payment_status"
+const LOV_KEY_DELAY_STATUS string = "delay_status"
+
 func (c *FinPaymentController) URLMapping() {
 
 	c.Mapping("listpayment", c.ListPayment)
@@ -61,7 +64,43 @@ func (c *FinPaymentController) GetList() {
 	if err != nil {
 		c.Data["json"] = c.HandleError(err)
 	} else {
+		for index,paymentvo := range l {
+			paymentstatusvalue := dao.GetLovValueByLovIdAndKey(int8(paymentvo.LovPaymentStatus), "payment_status")
+			delaystatusvalue := dao.GetLovValueByLovIdAndKey(int8(paymentvo.LovDelayStatus), "delay_status")
+			
+			l[index].PaymentStatus = paymentstatusvalue
+			l[index].DelayStatus = delaystatusvalue
+			
+		}
+//		beego.Info("******", &l)
 		c.Data["json"] = l
 	}
+	c.ServeJSON()
+}
+
+// @Title Get payment status lovs
+// @Success 200
+// @Failure 403
+// @router /paymentstatus [post]
+func (c *FinPaymentController) GetPaymentStatusLovs() {
+	beego.Info("try to get payment status lovs")
+	finlovs, _ := dao.GetFinLovByLovKey(LOV_KEY_PAYMENT_STATUS)
+	c.Data["json"] = &finlovs
+	c.ServeJSON()
+}
+
+// @Title Get delay status lovs
+// @Success 200
+// @Failure 403
+// @router /delaystatus [post]
+func (c *FinPaymentController) GetDelayStatusLovs() {
+	beego.Info("try to get delay status lovs")
+	finlovs, _ := dao.GetFinLovByLovKey(LOV_KEY_DELAY_STATUS)
+	
+	for _, finlov := range finlovs {
+		beego.Info("******", finlov.LovValue)
+		
+	}
+	c.Data["json"] = &finlovs
 	c.ServeJSON()
 }
