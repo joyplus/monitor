@@ -46,10 +46,12 @@ func (c *FinPaymentController) GetList() {
 		merchantId = -1
 	}
 	paymentStatus, errParam = c.GetInt("paymentStatus")
+	beego.Info("parameter paymentStatus:", paymentStatus)
 	if errParam != nil {
 		paymentStatus = -1
 	}
 	delayStatus, errParam = c.GetInt("delayStatus")
+	beego.Info("parameter delayStatus:", delayStatus)
 	if errParam != nil {
 		delayStatus = -1
 	}

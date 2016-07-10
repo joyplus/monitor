@@ -1,7 +1,6 @@
 package models
 
 import (
-	//"fenqiwanh5/lib"
 	"fenqiwanh5/models"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
@@ -108,20 +107,20 @@ func GetPaymentsByStatus(merchantId int, paymentStatus int, delayStatus int) (pa
 	qb.From("fin_payment as payment").InnerJoin("fin_person as person").On("payment.person_id=person.id")
 	qb.InnerJoin("fin_order as finorder").On("payment.order_id=finorder.id")
 	qb.InnerJoin("fin_merchant_user_matrix as matrix").On("person.id=matrix.person_id").And("matrix.merchant_id=?")
-	if paymentStatus >= 0 {
-		qb.Where("payment.lov_payment_status=?")
-	}
-	if delayStatus >= 0 {
-		qb.Where("payment.lov_delay_status=?")
-	}
-	qb.OrderBy("payment.payment_date").Asc()
+	
 	var r orm.RawSeter
 	
 	if paymentStatus >= 0 && delayStatus >= 0 {
+		qb.Where("payment.lov_payment_status=?").And("payment.lov_delay_status=?")
+		qb.OrderBy("payment.payment_date").Asc()
 		r = o.Raw(qb.String(), merchantId, paymentStatus, delayStatus)
 	} else if paymentStatus >= 0 {
+		qb.Where("payment.lov_payment_status=?")
+		qb.OrderBy("payment.payment_date").Asc()
 		r = o.Raw(qb.String(), merchantId, paymentStatus)
 	} else if delayStatus >= 0 {
+		qb.Where("payment.lov_delay_status=?")
+		qb.OrderBy("payment.payment_date").Asc()
 		r = o.Raw(qb.String(), merchantId, delayStatus)
 	} else {
 		beego.Info("merchantId:", merchantId)
