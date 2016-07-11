@@ -104,7 +104,7 @@ func CalcDuration(strPaymentDate string, strCurrentDate string) (duration int, e
 func GetPaymentsByStatus(merchantId int, paymentStatus int, delayStatus int) (payments []vo.PaymentVo, err error) {
 	o := orm.NewOrm()
 
-	_, err = o.Raw("SELECT payment.id, order.product_name,`person`.`name`,`person`.`mobile_number`, `payment`.lov_payment_status,payment.payment_date,payment.payment_amount,payment.payment_stage FROM `fin_payment` as `payment` inner join `fin_person` as`person` on `payment`.person_id=`person`.id inner join fin_order as `order` on `payment`.order_id=order.id inner join fin_merchant_user_matrix as matrix on person.id=matrix.person_id and matrix.merchant_id=?  where `payment`.`lov_payment_status`=? and `payment`.`lov_delay_status`=? order by`payment`.payment_date asc", merchantId, paymentStatus, delayStatus).QueryRows(&payments)
+	_, err = o.Raw("SELECT payment.id, order.product_name,`person`.`name`,matrix.merchant_user_name,`person`.`mobile_number`, `payment`.lov_payment_status,payment.payment_date,payment.payment_amount,payment.delay_payment_fine,payment.payment_stage FROM `fin_payment` as `payment` inner join `fin_person` as`person` on `payment`.person_id=`person`.id inner join fin_order as `order` on `payment`.order_id=order.id inner join fin_merchant_user_matrix as matrix on person.id=matrix.person_id and matrix.merchant_id=?  where `payment`.`lov_payment_status`=? and `payment`.`lov_delay_status`=? order by`payment`.payment_date asc", merchantId, paymentStatus, delayStatus).QueryRows(&payments)
 
 	return
 }
