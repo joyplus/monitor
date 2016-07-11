@@ -5,3 +5,8 @@ INSERT INTO `node` (`id`, `title`, `name`, `level`, `pid`, `remark`, `status`, `
 
 INSERT INTO `node_roles` (`id`, `node_id`, `role_id`) VALUES (NULL, '30', '2'), (NULL, '31', '2');
 INSERT INTO `node_roles` (`id`, `node_id`, `role_id`) VALUES (NULL, '32', '2');
+
+INSERT INTO `node` (`id`, `title`, `name`, `level`, `pid`, `remark`, `status`, `group_id`) VALUES
+(33, '账单', 'payment/listpayment', 2, 25, '', 2, 1);
+
+INSERT INTO `node_roles` (`id`, `node_id`, `role_id`) VALUES (NULL, '33', '2');

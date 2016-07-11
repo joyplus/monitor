@@ -18,6 +18,11 @@ func init() {
 				&controllers.FinOrderController{},
 			),
 		),
+		beego.NSNamespace("/payment",
+			beego.NSInclude(
+				&controllers.FinPaymentController{},
+			),
+		),
 	)
 	beego.AddNamespace(ns)
 
