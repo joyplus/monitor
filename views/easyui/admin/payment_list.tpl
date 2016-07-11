@@ -17,6 +17,7 @@
             columns:[[
                 {field:'Id',title:'ID',width:20,align:'left'},
                 {field:'Name',title:'借款人姓名',width:50,align:'left'},
+                {field:'MerchantUserName',title:'商户用户姓名',width:50,align:'left'},
                 {field:'PaymentNumber',title:'账单编号',width:100,align:'center'},
                 {field:'PaymentAmount',title:'账单金额(￥)',width:100,align:'center',editor:'text'},
                 {field:'PaymentDate',title:'账单日期',width:100,align:'center',editor:'text',

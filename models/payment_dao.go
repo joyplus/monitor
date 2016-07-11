@@ -103,7 +103,7 @@ func CalcDuration(strPaymentDate string, strCurrentDate string) (duration int, e
 func GetPaymentsByStatus(merchantId int, paymentStatus int, delayStatus int) (payments []vo.PaymentVo, err error) {
 	o := orm.NewOrm()
     qb, _ := orm.NewQueryBuilder("mysql")
-	qb.Select("payment.id, finorder.product_name,person.name,person.mobile_number, payment.lov_payment_status,payment.payment_date,payment.payment_amount,payment.payment_stage, payment.payment_number, payment.delay_payment_fine, payment.lov_delay_status")
+	qb.Select("payment.id, finorder.product_name,person.name,person.mobile_number, payment.lov_payment_status,payment.payment_date,payment.payment_amount,payment.payment_stage, payment.payment_number, payment.delay_payment_fine, payment.lov_delay_status, matrix.merchant_user_name")
 	qb.From("fin_payment as payment").InnerJoin("fin_person as person").On("payment.person_id=person.id")
 	qb.InnerJoin("fin_order as finorder").On("payment.order_id=finorder.id")
 	qb.InnerJoin("fin_merchant_user_matrix as matrix").On("person.id=matrix.person_id").And("matrix.merchant_id=?")
