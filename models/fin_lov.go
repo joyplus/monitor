@@ -3,7 +3,6 @@ package models
 import (
 	fenqimodel "fenqiwanh5/models"
 	"github.com/astaxie/beego/orm"
-	"github.com/astaxie/beego"
 )
 
 // get all the lov key-value maps, filtered by lov key
@@ -33,6 +32,5 @@ func GetLovValueByLovIdAndKey(lovid int8, lovkey string) string {
 	finlov := new (fenqimodel.FinLov)
 	qs := o.QueryTable(finlov)
 	qs.Filter("lov_id", lovid).Filter("lov_key", lovkey).One(&lov)
-	beego.Info("&&&", lov.LovValue, "lovkey:", lovkey)
 	return lov.LovValue
 }

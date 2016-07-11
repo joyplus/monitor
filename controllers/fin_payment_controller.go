@@ -17,8 +17,8 @@ type FinPaymentController struct {
 	BaseController
 }
 
-const LOV_KEY_PAYMENT_STATUS string = "payment_status"
-const LOV_KEY_DELAY_STATUS string = "delay_status"
+const LOV_KEY_PAYMENT_STATUS string = "LOV_PAYMENT_STATUS"
+const LOV_KEY_DELAY_STATUS string = "LOV_DELAY_STATUS"
 
 func (c *FinPaymentController) URLMapping() {
 
@@ -49,12 +49,12 @@ func (c *FinPaymentController) GetList() {
 		merchantId = -1
 	}
 	paymentStatus, errParam = c.GetInt("paymentStatus")
-	beego.Info("parameter paymentStatus:", paymentStatus)
+	beego.Debug("parameter paymentStatus:", paymentStatus)
 	if errParam != nil {
 		paymentStatus = -1
 	}
 	delayStatus, errParam = c.GetInt("delayStatus")
-	beego.Info("parameter delayStatus:", delayStatus)
+	beego.Debug("parameter delayStatus:", delayStatus)
 	if errParam != nil {
 		delayStatus = -1
 	}
@@ -64,15 +64,6 @@ func (c *FinPaymentController) GetList() {
 	if err != nil {
 		c.Data["json"] = c.HandleError(err)
 	} else {
-		for index,paymentvo := range l {
-			paymentstatusvalue := dao.GetLovValueByLovIdAndKey(int8(paymentvo.LovPaymentStatus), "payment_status")
-			delaystatusvalue := dao.GetLovValueByLovIdAndKey(int8(paymentvo.LovDelayStatus), "delay_status")
-			
-			l[index].PaymentStatus = paymentstatusvalue
-			l[index].DelayStatus = delaystatusvalue
-			
-		}
-//		beego.Info("******", &l)
 		c.Data["json"] = l
 	}
 	c.ServeJSON()
@@ -83,7 +74,7 @@ func (c *FinPaymentController) GetList() {
 // @Failure 403
 // @router /paymentstatus [post]
 func (c *FinPaymentController) GetPaymentStatusLovs() {
-	beego.Info("try to get payment status lovs")
+	beego.Debug("try to get payment status lovs")
 	finlovs, _ := dao.GetFinLovByLovKey(LOV_KEY_PAYMENT_STATUS)
 	c.Data["json"] = &finlovs
 	c.ServeJSON()
@@ -94,13 +85,8 @@ func (c *FinPaymentController) GetPaymentStatusLovs() {
 // @Failure 403
 // @router /delaystatus [post]
 func (c *FinPaymentController) GetDelayStatusLovs() {
-	beego.Info("try to get delay status lovs")
+	beego.Debug("try to get delay status lovs")
 	finlovs, _ := dao.GetFinLovByLovKey(LOV_KEY_DELAY_STATUS)
-	
-	for _, finlov := range finlovs {
-		beego.Info("******", finlov.LovValue)
-		
-	}
 	c.Data["json"] = &finlovs
 	c.ServeJSON()
 }

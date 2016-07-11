@@ -28,8 +28,43 @@
 				},
                 {field:'DelayPaymentFine',title:'罚金(￥)',width:100,align:'center',editor:'text'},
                 {field:'MobileNumber',title:'手机号码',width:60,align:'center',editor:'text'},
-                {field:'PaymentStatus',title:'支付状态',width:50,align:'center',editor:'text'},
-				{field:'DelayStatus',title:'逾期状态',width:50,align:'center',editor:'text'}
+                {field:'LovPaymentStatus',title:'支付状态',width:50,align:'center',editor:'text',
+                    formatter:function(value, row, index){
+                        var result = "";
+                        switch (value) {
+                            case -1:
+                                result = "不限";
+                                break;
+                            case 0:
+                                result = "待支付";
+                                break;
+                            case 2:
+                                result = "支付完成";
+                                break;
+                        }
+                        return result;
+                    }
+                },
+				{field:'LovDelayStatus',title:'逾期状态',width:50,align:'center',editor:'text',
+                      formatter:function(value, row, index){
+                          var result = "";
+                          switch (value) {
+                              case -1:
+                                  result = "不限";
+                                  break;
+                              case 0:
+                                  result = "正常";
+                                  break;
+                              case 1:
+                                  result = "逾期少于30天";
+                                  break;
+                              case 2:
+                                  result = "逾期大于30天";
+                                  break;
+                          }
+                          return result;
+                      }
+                }
             ]],
 
             onRowContextMenu:function(e, index, row){
@@ -56,8 +91,6 @@
 		var delayStatusVal = $("#delaystatusid").combobox('getValue');
         $("#datagrid").datagrid("reload", {paymentStatus:paymentStatusVal, delayStatus:delayStatusVal});
     }
-
-
 
 </script>
 <body>
