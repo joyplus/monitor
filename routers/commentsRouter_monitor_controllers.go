@@ -55,4 +55,18 @@ func init() {
 			[]string{"post"},
 			nil})
 
+	beego.GlobalControllerRouter["monitor/controllers:FinPaymentController"] = append(beego.GlobalControllerRouter["monitor/controllers:FinPaymentController"],
+		beego.ControllerComments{
+			"GetPaymentStatusLovs",
+			`/paymentstatus`,
+			[]string{"post"},
+			nil})
+
+	beego.GlobalControllerRouter["monitor/controllers:FinPaymentController"] = append(beego.GlobalControllerRouter["monitor/controllers:FinPaymentController"],
+		beego.ControllerComments{
+			"GetDelayStatusLovs",
+			`/delaystatus`,
+			[]string{"post"},
+			nil})
+
 }
