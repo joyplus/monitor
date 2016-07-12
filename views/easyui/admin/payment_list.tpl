@@ -26,7 +26,12 @@
                         return unixTimestamp.getFullYear()+"-"+(unixTimestamp.getMonth()+1)+"-"+unixTimestamp.getDate();;
                     }
 				},
-                {field:'DelayPaymentFine',title:'罚金(￥)',width:100,align:'center',editor:'text'},
+                {field:'DelayPaymentFine',title:'罚金(￥)',width:100,align:'center',editor:'text',
+				    formatter:function(value, row, index){
+                        
+                        return value.toFixed(2);
+                    }
+            },
                 {field:'MobileNumber',title:'手机号码',width:60,align:'center',editor:'text'},
                 {field:'LovPaymentStatus',title:'支付状态',width:50,align:'center',editor:'text',
                     formatter:function(value, row, index){

@@ -279,4 +279,6 @@ INSERT INTO fin_lov (`id`, `lov_id`, `lov_value`, `disp_order`, `lov_key`) VALUE
 INSERT INTO fin_lov (`id`, `lov_id`, `lov_value`, `disp_order`, `lov_key`) VALUES (6, '2', '逾期大于30天', '3', 'LOV_DELAY_STATUS');
 INSERT INTO fin_lov (`id`, `lov_id`, `lov_value`, `disp_order`, `lov_key`) VALUES (7, '-1', '不限', '0', 'LOV_DELAY_STATUS');
 
+ALTER TABLE `fin_payment` CHANGE `delay_payment_fine` `delay_payment_fine` FLOAT(10,2) NOT NULL;
+
 
