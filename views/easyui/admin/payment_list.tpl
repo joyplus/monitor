@@ -23,7 +23,7 @@
                 {field:'PaymentDate',title:'账单日期',width:100,align:'center',editor:'text',
 					formatter:function(value,row,index){
                         var unixTimestamp = new Date(value);
-                        return unixTimestamp.toLocaleString();
+                        return unixTimestamp.getFullYear()+"-"+(unixTimestamp.getMonth()+1)+"-"+unixTimestamp.getDate();;
                     }
 				},
                 {field:'DelayPaymentFine',title:'罚金(￥)',width:100,align:'center',editor:'text'},
