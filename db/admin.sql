@@ -8,7 +8,7 @@
 -- PHP Version: 5.6.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
+SET time_zone = "+08:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -269,3 +269,14 @@ ALTER TABLE `user_roles`
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+--Date: 20160710
+INSERT INTO fin_lov (`id`, `lov_id`, `lov_value`, `disp_order`, `lov_key`) VALUES (1, '0', '待支付', '1', 'LOV_PAYMENT_STATUS');
+INSERT INTO fin_lov (`id`, `lov_id`, `lov_value`, `disp_order`, `lov_key`) VALUES (2, '2', '支付完成', '2', 'LOV_PAYMENT_STATUS');
+INSERT INTO fin_lov (`id`, `lov_id`, `lov_value`, `disp_order`, `lov_key`) VALUES (3, '-1', '不限', '0', 'LOV_PAYMENT_STATUS');
+INSERT INTO fin_lov (`id`, `lov_id`, `lov_value`, `disp_order`, `lov_key`) VALUES (4, '0', '正常', '1', 'LOV_DELAY_STATUS');
+INSERT INTO fin_lov (`id`, `lov_id`, `lov_value`, `disp_order`, `lov_key`) VALUES (5, '1', '逾期少于30天', '2', 'LOV_DELAY_STATUS');
+INSERT INTO fin_lov (`id`, `lov_id`, `lov_value`, `disp_order`, `lov_key`) VALUES (6, '2', '逾期大于30天', '3', 'LOV_DELAY_STATUS');
+INSERT INTO fin_lov (`id`, `lov_id`, `lov_value`, `disp_order`, `lov_key`) VALUES (7, '-1', '不限', '0', 'LOV_DELAY_STATUS');
+
+
