@@ -41,7 +41,7 @@ func SendPaymentNotification() (err error) {
 	var aryPayments []vo.PaymentVo
 	aryPayments, err = GetPendingPayments()
 	for _, paymentVo := range aryPayments {
-		go sendPaymentNotificationBySMS(paymentVo, TplIdHuankuanNotify)
+		go SendPaymentNotificationBySMS(paymentVo, TplIdHuankuanNotify)
 	}
 	return
 }
@@ -64,7 +64,7 @@ func SendOverduePaymentNotification() (err error) {
 	var aryPayments []vo.PaymentVo
 	aryPayments, err = GetOverduePayments()
 	for _, paymentVo := range aryPayments {
-		go sendPaymentNotificationBySMS(paymentVo, TplIdYuqiNotify)
+		go SendPaymentNotificationBySMS(paymentVo, TplIdYuqiNotify)
 	}
 	return
 }
@@ -77,7 +77,7 @@ func GetOverduePayments() (aryPayments []vo.PaymentVo, err error) {
 	return
 }
 
-func sendPaymentNotificationBySMS(paymentVo vo.PaymentVo, tplId string) (err error) {
+func SendPaymentNotificationBySMS(paymentVo vo.PaymentVo, tplId string) (err error) {
 	strPaymentAmount := strconv.FormatFloat(paymentVo.PaymentAmount, 'f', 0, 64)
 	datas := []string{paymentVo.Name, strPaymentAmount, paymentVo.PaymentDate.Format("2006年01月02日")}
 

@@ -7,9 +7,10 @@ import (
 	////"fenqiwanh5/models"
 	"github.com/astaxie/beego"
 	dao "monitor/models"
-	//"monitor/vo"
-	////"strconv"
-	//"strings"
+	"monitor/tasks"
+	//"time"
+
+	//"time"
 )
 
 // oprations for FinPayment
@@ -90,3 +91,25 @@ func (c *FinPaymentController) GetDelayStatusLovs() {
 	c.Data["json"] = &finlovs
 	c.ServeJSON()
 }
+
+// @Title Get delay status lovs
+// @Success 200
+// @Failure 403
+// @router /sendsms [get]
+func (c *FinPaymentController) SendSms() {
+	beego.Debug("start to send sms")
+	id := c.GetString("paymentid")
+	tpid := c.GetString("tpid")
+	beego.Debug("********** payment id:", id)
+	paymentvo, err := dao.GetPaymentById(id)
+	if err != nil {
+		c.HandleError(err)
+		return
+	}
+	beego.Debug(paymentvo)
+	tasks.SendPaymentNotificationBySMS(paymentvo, tpid)
+	//time.Sleep(1000 * time.Millisecond)
+	c.Data["json"] = "success"
+	c.ServeJSON()
+}
+
