@@ -17,9 +17,11 @@ INSERT INTO `node` (`id`, `title`, `name`, `level`, `pid`, `remark`, `status`, `
 INSERT INTO `node` (`id`, `title`, `name`, `level`, `pid`, `remark`, `status`, `group_id`) VALUES (NULL, '获取账单列表', 'getlist', '3', '33', '', '2', '1');
 INSERT INTO `node` (`id`, `title`, `name`, `level`, `pid`, `remark`, `status`, `group_id`) VALUES (NULL, '获得账单状态列表', 'paymentstatus', '3', '33', '', '2', '1');
 INSERT INTO `node` (`id`, `title`, `name`, `level`, `pid`, `remark`, `status`, `group_id`) VALUES (NULL, '获取逾期状态列表', 'delaystatus', '3', '33', '', '2', '1');
+INSERT INTO `node` (`id`, `title`, `name`, `level`, `pid`, `remark`, `status`, `group_id`) VALUES (NULL, '发送催收短信', 'sendsms', '3', '33', '', '2', '1');
 
 
 INSERT INTO `node_roles` (`id`, `node_id`, `role_id`) VALUES (NULL, '34', '2');
 INSERT INTO `node_roles` (`id`, `node_id`, `role_id`) VALUES (NULL, '35', '2');
 INSERT INTO `node_roles` (`id`, `node_id`, `role_id`) VALUES (NULL, '36', '2');
 INSERT INTO `node_roles` (`id`, `node_id`, `role_id`) VALUES (NULL, '37', '2');
+INSERT INTO `node_roles` (`id`, `node_id`, `role_id`) VALUES (NULL, '38', '2');
