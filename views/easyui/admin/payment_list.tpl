@@ -129,7 +129,7 @@
     function sendsms() {
        showprogressbar();
        var paymentid = $("#paymentid").val();
-       var tpid = $('smstpl').val();
+       var tpid = $('#smstpl').combobox('getValue');
         $.ajax("/admin/payment/sendsms?paymentid=" + paymentid + "&tpid=" + tpid).done(function(){
             $('#p').progressbar('setValue', 100);
             $('#progressbardialog').dialog('close');
@@ -182,16 +182,26 @@
                 data-options="resizable:true,modal:true,closed:true,buttons:'#mb'">
                 <div style="margin:10px 0;"></div>
                 <table>
-                    <!-- <tr><td>用户姓名:</td> <td><input id="username" type="text" class="easyui-textbox" style="width:200px"></input></td></tr> -->
-                    <tr><td>商户用户名:</td> <td><input id="merchantusername" type="text" class="easyui-textbox"  style="width:200px"></input></td></tr>
-                    <tr><td>手机号码:</td> <td><input id="mobilenumber" type="tel" class="easyui-textbox" style="width:200px"></input></td></tr>
+                    <tr><td>用户姓名:</td> <td><input id="username" type="text" class="easyui-textbox" style="width:200px" readonly></input></td></tr>
+                    <tr><td>商户用户名:</td> <td><input id="merchantusername" type="text" class="easyui-textbox"  style="width:200px" readonly></input></td></tr>
+                    <tr><td>手机号码:</td> <td><input id="mobilenumber" type="tel" class="easyui-textbox" style="width:200px" readonly></input></td></tr>
                     <tr>
                         <td>选择消息模版:</td>
                         <td>
-                            <select id="smstpl" class="easyui-combobox" name="smstemplate" style="width:200px;">
-                                   <option value="91354">逾期还款通知: 91354</option>
-                                   <option value="93152">提前还款通知：93152</option>
-                            </select>
+                            <input id="smstpl" class="easyui-combobox" data-options="
+                                    panelHeight:'auto',
+                                    editable:false,
+                                    width:200,
+                            		valueField: 'value',
+                            		textField: 'label',
+                            		data: [{
+                            			label: '逾期还款通知: 91354',
+                            			value: '91354'
+                            		},{
+                            			label: '提前还款通知：93152',
+                            			value: '93152'
+                            		}]" />
+
                         </td>
                     </tr>
                     <tr><input type="hidden" id="paymentid" /></tr>
