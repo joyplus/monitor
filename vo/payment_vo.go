@@ -17,4 +17,5 @@ type PaymentVo struct {
 	MerchantUserName string
 	DelayPaymentFine float64
 	LovDelayStatus   int
+	Operation string
 }
