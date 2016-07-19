@@ -103,7 +103,7 @@
 
 		$('#paymentstatusid').combobox('setValue', -1);
 		$('#delaystatusid').combobox('setValue', -1);
-		$('#smstpl').combobox('setValue', '91354');
+		$('#smstpl').combobox('setValue', '102249');
 
     });
 
