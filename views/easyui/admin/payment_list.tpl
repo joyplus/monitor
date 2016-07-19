@@ -74,15 +74,18 @@
                 },
                 {field:'Operation', title:'操作',width:50,align:'center',
                     formatter: function(value,row, index){
+
+                        var buttons = "";
                         if (row.LovDelayStatus == 1 || row.LovDelayStatus == 2 || row.LovPaymentStatus == 0) {
                             // 用户姓名
                             // 商户用户名
                             // 手机号码
-                            return '<div><a href="#" icon="icon-edit" plain="true" onclick="opensendsmsdialog(' + "'" + row.Name + "'" + ',' + "'" + row.MerchantUserName + "'" + ',' + "'" + row.MobileNumber + "'" + ',' + "'" + row.Id + "'" + ')" class="easyui-linkbutton" >催收短信</a></div>';
-                        } else {
-                            return "";
+                            buttons += '<div><a href="#" icon="icon-edit" plain="true" onclick="opensendsmsdialog(' + "'" + row.Name + "'" + ',' + "'" + row.MerchantUserName + "'" + ',' + "'" + row.MobileNumber + "'" + ',' + "'" + row.Id + "'" + ')" class="easyui-linkbutton" >催收短信</a></div>';
                         }
-
+                        if (row.DelayPaymentFine > 0) {
+                            buttons += '<div><a href="#" icon="icon-edit" plain="true" onclick="cancelfine(' + "'" + row.Name + "'" + ',' + "'" + row.MerchantUserName + "'" + ',' + "'" + row.DelayPaymentFine + "'" + ',' + "'" + row.Id + "'"  + ')" class="easyui-linkbutton" >免除罚金</a></div>';
+                        }
+                        return buttons;
                     }
                 }
             ]],
@@ -100,6 +103,7 @@
 
 		$('#paymentstatusid').combobox('setValue', -1);
 		$('#delaystatusid').combobox('setValue', -1);
+		$('#smstpl').combobox('setValue', '91354');
 
     });
 
@@ -130,13 +134,33 @@
        showprogressbar();
        var paymentid = $("#paymentid").val();
        var tpid = $('#smstpl').combobox('getValue');
-        $.ajax("/admin/payment/sendsms?paymentid=" + paymentid + "&tpid=" + tpid).done(function(){
-            $('#p').progressbar('setValue', 100);
-            $('#progressbardialog').dialog('close');
-        }).fail(function(){
-             $('#progressbardialog').dialog('close');
-            alert("发送消息失败");
-        });
+       vac.ajax('/admin/payment/sendsms', {paymentid:paymentid, tpid:tpid}, 'POST', function(r) {
+           if(r.status){
+               $('#p').progressbar('setValue', 100);
+               $('#progressbardialog').dialog('close');
+               //show message dialog
+               $.messager.show(
+                {
+                	title:'短信发送成功',
+                	msg:'催收短信发送成功!',
+                	timeout:0,
+                	showType:'show',
+                	style:{
+                        right:'',
+                        //top:document.body.scrollTop+document.documentElement.scrollTop,
+                        bottom:''
+                    }
+
+
+                    }
+               );
+
+           }else{
+               $('#progressbardialog').dialog('close');
+               vac.alert(r.info);
+           }
+       });
+
     }
 
     function showprogressbar() {
@@ -152,6 +176,38 @@
 
     function closeprogressbar() {
         $('#progressbardialog').dialog('close');
+    }
+
+    function cancelfine(name, merchantusername, delaypaymentfine, paymentid) {
+           var msg = "是否免除"+ name + "(" + merchantusername + ")该笔账单的罚金" + delaypaymentfine;
+           $.messager.confirm("免除罚金", msg, function(r) {
+                if (r) {
+                    vac.ajax('/admin/payment/canceldelaypaymentfine', {paymentid:paymentid}, 'POST', function(r) {
+                               if(r.status){
+                                   reloadrow();
+                                   //show message dialog
+                                   $.messager.show(
+                                    {
+                                    	title:'免除罚金',
+                                    	msg:'已经免除罚金!',
+                                    	timeout:0,
+                                    	showType:'show',
+                                    	style:{
+                                            right:'',
+                                            //top:document.body.scrollTop+document.documentElement.scrollTop,
+                                            bottom:''
+                                        }
+
+
+                                        }
+                                   );
+
+                               }else{
+                                   vac.alert(r.info);
+                               }
+                           });
+                }
+           });
     }
 
 </script>

@@ -73,7 +73,14 @@ func init() {
 		beego.ControllerComments{
 			"SendSms",
 			`/sendsms`,
-			[]string{"get"},
+			[]string{"post"},
+			nil})
+
+	beego.GlobalControllerRouter["monitor/controllers:FinPaymentController"] = append(beego.GlobalControllerRouter["monitor/controllers:FinPaymentController"],
+		beego.ControllerComments{
+			"CancelDelaypaymentFine",
+			`/canceldelaypaymentfine`,
+			[]string{"post"},
 			nil})
 
 }
