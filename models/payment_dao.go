@@ -143,3 +143,12 @@ func GetPaymentById(paymentId string)  (paymentvo vo.PaymentVo, err error){
 	err = o.Raw(qb.String(), paymentId).QueryRow(&paymentvo)
 	return paymentvo, err
 }
+
+func UpdateDelayPaymentFineById(paymentId string, delaypaymentfine float64) (err error) {
+	o := orm.NewOrm()
+	o.Begin()
+	sql := "update fin_payment set delay_payment_fine=? where id=?"
+	_, err = o.Raw(sql, delaypaymentfine, paymentId).Exec()
+	o.Commit()
+	return err
+}

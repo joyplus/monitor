@@ -96,7 +96,6 @@ func (c *FinPaymentController) GetDelayStatusLovs() {
 // @Failure 403
 // @router /sendsms [post]
 func (c *FinPaymentController) SendSms() {
-	beego.Debug("start to send sms")
 	id := c.GetString("paymentid")
 	tpid := c.GetString("tpid")
 	beego.Debug("********** payment id:", id)
@@ -112,3 +111,17 @@ func (c *FinPaymentController) SendSms() {
 	c.Rsp(true, "Success")
 }
 
+// @Title Cancel delay payment fine
+// @Success 200
+// @Failure 403
+// @router /canceldelaypaymentfine [post]
+func (c *FinPaymentController) CancelDelaypaymentFine()  {
+	id := c.GetString("paymentid")
+	beego.Debug("********** payment id:", id)
+	err := dao.UpdateDelayPaymentFineById(id, 0)
+	if err != nil {
+		c.Rsp(false, err.Error())
+		return
+	}
+	c.Rsp(true, "Success")
+}

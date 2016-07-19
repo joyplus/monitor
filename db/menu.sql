@@ -25,3 +25,6 @@ INSERT INTO `node_roles` (`id`, `node_id`, `role_id`) VALUES (NULL, '35', '2');
 INSERT INTO `node_roles` (`id`, `node_id`, `role_id`) VALUES (NULL, '36', '2');
 INSERT INTO `node_roles` (`id`, `node_id`, `role_id`) VALUES (NULL, '37', '2');
 INSERT INTO `node_roles` (`id`, `node_id`, `role_id`) VALUES (NULL, '38', '2');
+
+INSERT INTO `node` (`id`, `title`, `name`, `level`, `pid`, `remark`, `status`, `group_id`) VALUES (NULL, '免除罚金', 'canceldelaypaymentfine', '3', '33', '', '2', '1');
+INSERT INTO `node_roles` (`id`, `node_id`, `role_id`) VALUES (NULL, '39', '2');
