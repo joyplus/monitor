@@ -7,9 +7,9 @@ import (
 	////"fenqiwanh5/models"
 	"github.com/astaxie/beego"
 	dao "monitor/models"
-	//"monitor/vo"
-	////"strconv"
-	//"strings"
+	"monitor/tasks"
+
+	//"time"
 )
 
 // oprations for FinPayment
@@ -59,7 +59,7 @@ func (c *FinPaymentController) GetList() {
 		delayStatus = -1
 	}
 	// now use merchantId=1 as test case
-	merchantId =  1
+	merchantId = 1
 	l, err := dao.GetPaymentsByStatus(merchantId, paymentStatus, delayStatus)
 	if err != nil {
 		c.Data["json"] = c.HandleError(err)
@@ -88,5 +88,35 @@ func (c *FinPaymentController) GetDelayStatusLovs() {
 	beego.Debug("try to get delay status lovs")
 	finlovs, _ := dao.GetFinLovByLovKey(LOV_KEY_DELAY_STATUS)
 	c.Data["json"] = &finlovs
+	c.ServeJSON()
+}
+
+// @Title Get delay status lovs
+// @Success 200
+// @Failure 403
+// @router /sendsms [post]
+func (c *FinPaymentController) SendSms() {
+	id := c.GetString("paymentid")
+	tpid := c.GetString("tpid")
+	beego.Debug("********** payment id:", id)
+	beego.Debug("********** template id:", tpid)
+	paymentvo, err := dao.GetPaymentById(id)
+	if err == nil {
+		err = tasks.SendPaymentNotificationBySMS(paymentvo, tpid)
+	}
+	c.Data["json"] = c.HandleError(err)
+	c.ServeJSON()
+
+}
+
+// @Title Cancel delay payment fine
+// @Success 200
+// @Failure 403
+// @router /canceldelaypaymentfine [post]
+func (c *FinPaymentController) CancelDelaypaymentFine() {
+	id := c.GetString("paymentid")
+	beego.Debug("********** payment id:", id)
+	err := dao.UpdateDelayPaymentFineById(id, 0)
+	c.Data["json"] = c.HandleError(err)
 	c.ServeJSON()
 }
