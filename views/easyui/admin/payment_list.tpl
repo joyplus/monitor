@@ -100,6 +100,7 @@
 
 		$('#paymentstatusid').combobox('setValue', -1);
 		$('#delaystatusid').combobox('setValue', -1);
+		$('#smstpl').combobox('setValue', '91354');
 
     });
 
@@ -130,13 +131,33 @@
        showprogressbar();
        var paymentid = $("#paymentid").val();
        var tpid = $('#smstpl').combobox('getValue');
-        $.ajax("/admin/payment/sendsms?paymentid=" + paymentid + "&tpid=" + tpid).done(function(){
-            $('#p').progressbar('setValue', 100);
-            $('#progressbardialog').dialog('close');
-        }).fail(function(){
-             $('#progressbardialog').dialog('close');
-            alert("发送消息失败");
-        });
+       vac.ajax('/admin/payment/sendsms', {paymentid:paymentid, tpid:tpid}, 'POST', function(r) {
+           if(r.status){
+               $('#p').progressbar('setValue', 100);
+               $('#progressbardialog').dialog('close');
+               //show message dialog
+               $.messager.show(
+                {
+                	title:'短信发送成功',
+                	msg:'催收短信发送成功!',
+                	timeout:0,
+                	showType:'show',
+                	style:{
+                        right:'',
+                        //top:document.body.scrollTop+document.documentElement.scrollTop,
+                        bottom:''
+                    }
+
+
+                    }
+               );
+
+           }else{
+               $('#progressbardialog').dialog('close');
+               vac.alert(r.info);
+           }
+       });
+
     }
 
     function showprogressbar() {

@@ -94,20 +94,21 @@ func (c *FinPaymentController) GetDelayStatusLovs() {
 // @Title Get delay status lovs
 // @Success 200
 // @Failure 403
-// @router /sendsms [get]
+// @router /sendsms [post]
 func (c *FinPaymentController) SendSms() {
 	beego.Debug("start to send sms")
 	id := c.GetString("paymentid")
 	tpid := c.GetString("tpid")
 	beego.Debug("********** payment id:", id)
+	beego.Debug("********** template id:", tpid)
 	paymentvo, err := dao.GetPaymentById(id)
-	if err == nil {
-		beego.Debug(paymentvo)
-		tasks.SendPaymentNotificationBySMS(paymentvo, tpid)
+	if err != nil {
+		c.Rsp(false, err.Error())
+		return
 	}
+	beego.Debug(paymentvo)
+	tasks.SendPaymentNotificationBySMS(paymentvo, tpid)
 	//time.Sleep(1000 * time.Millisecond)
-	res := c.HandleError(err)
-	c.Data["json"] = res
-	c.ServeJSON()
+	c.Rsp(true, "Success")
 }
 

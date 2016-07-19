@@ -73,7 +73,7 @@ func init() {
 		beego.ControllerComments{
 			"SendSms",
 			`/sendsms`,
-			[]string{"get"},
+			[]string{"post"},
 			nil})
 
 }
