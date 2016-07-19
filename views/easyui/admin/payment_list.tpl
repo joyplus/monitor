@@ -135,7 +135,7 @@
        var paymentid = $("#paymentid").val();
        var tpid = $('#smstpl').combobox('getValue');
        vac.ajax('/admin/payment/sendsms', {paymentid:paymentid, tpid:tpid}, 'POST', function(r) {
-           if(r.status){
+           if(r.status_code == 200){
                $('#p').progressbar('setValue', 100);
                $('#progressbardialog').dialog('close');
                //show message dialog
@@ -157,7 +157,7 @@
 
            }else{
                $('#progressbardialog').dialog('close');
-               vac.alert(r.info);
+               vac.alert(r.message);
            }
        });
 
@@ -183,7 +183,7 @@
            $.messager.confirm("免除罚金", msg, function(r) {
                 if (r) {
                     vac.ajax('/admin/payment/canceldelaypaymentfine', {paymentid:paymentid}, 'POST', function(r) {
-                               if(r.status){
+                        if(r.status_code == 200){
                                    reloadrow();
                                    //show message dialog
                                    $.messager.show(
@@ -203,7 +203,7 @@
                                    );
 
                                }else{
-                                   vac.alert(r.info);
+                                   vac.alert(r.message);
                                }
                            });
                 }
@@ -251,11 +251,8 @@
                             		valueField: 'value',
                             		textField: 'label',
                             		data: [{
-                            			label: '逾期还款通知: 91354',
-                            			value: '91354'
-                            		},{
-                            			label: '提前还款通知：93152',
-                            			value: '93152'
+                            			label: '逾期7天警告: 102249',
+                            			value: '102249'
                             		}]" />
 
                         </td>

@@ -59,7 +59,7 @@ func (c *FinPaymentController) GetList() {
 		delayStatus = -1
 	}
 	// now use merchantId=1 as test case
-	merchantId =  1
+	merchantId = 1
 	l, err := dao.GetPaymentsByStatus(merchantId, paymentStatus, delayStatus)
 	if err != nil {
 		c.Data["json"] = c.HandleError(err)
@@ -101,27 +101,22 @@ func (c *FinPaymentController) SendSms() {
 	beego.Debug("********** payment id:", id)
 	beego.Debug("********** template id:", tpid)
 	paymentvo, err := dao.GetPaymentById(id)
-	if err != nil {
-		c.Rsp(false, err.Error())
-		return
+	if err == nil {
+		err = tasks.SendPaymentNotificationBySMS(paymentvo, tpid)
 	}
-	beego.Debug(paymentvo)
-	tasks.SendPaymentNotificationBySMS(paymentvo, tpid)
-	//time.Sleep(1000 * time.Millisecond)
-	c.Rsp(true, "Success")
+	c.Data["json"] = c.HandleError(err)
+	c.ServeJSON()
+
 }
 
 // @Title Cancel delay payment fine
 // @Success 200
 // @Failure 403
 // @router /canceldelaypaymentfine [post]
-func (c *FinPaymentController) CancelDelaypaymentFine()  {
+func (c *FinPaymentController) CancelDelaypaymentFine() {
 	id := c.GetString("paymentid")
 	beego.Debug("********** payment id:", id)
 	err := dao.UpdateDelayPaymentFineById(id, 0)
-	if err != nil {
-		c.Rsp(false, err.Error())
-		return
-	}
-	c.Rsp(true, "Success")
+	c.Data["json"] = c.HandleError(err)
+	c.ServeJSON()
 }
