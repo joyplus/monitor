@@ -59,12 +59,18 @@ func (c *FinPaymentController) GetList() {
 		delayStatus = -1
 	}
 	// now use merchantId=1 as test case
-	merchantId = 1
-	l, err := dao.GetPaymentsByStatus(merchantId, paymentStatus, delayStatus)
+	merchantId =  1
+	page, _ := c.GetInt("page")
+	page_size, _ := c.GetInt("rows")
+	beego.Debug("page:", page)
+	beego.Debug("page size:", page_size)
+	total := dao.CountPaymentsByStatus(merchantId, paymentStatus, delayStatus)
+	beego.Debug("total:", total)
+	l, err := dao.GetPaymentsByStatus(merchantId, paymentStatus, delayStatus, page, page_size)
 	if err != nil {
 		c.Data["json"] = c.HandleError(err)
 	} else {
-		c.Data["json"] = l
+		c.Data["json"] = &map[string]interface{}{"total": total, "rows": &l}
 	}
 	c.ServeJSON()
 }

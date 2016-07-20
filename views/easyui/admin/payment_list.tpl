@@ -11,7 +11,7 @@
             title:'账单列表',
             url:URL+"/getlist",
             method:'POST',
-            pagination:false,
+            pagination:true,
             fitColumns:true,
             striped:true,
             rownumbers:true,
@@ -114,7 +114,7 @@
 
 		var paymentStatusVal = $("#paymentstatusid").combobox('getValue');
 		var delayStatusVal = $("#delaystatusid").combobox('getValue');
-        $("#datagrid").datagrid("reload", {paymentStatus:paymentStatusVal, delayStatus:delayStatusVal});
+        $("#datagrid").datagrid("reload", {paymentStatus:paymentStatusVal, delayStatus:delayStatusVal, page:1});
     }
 
     //发送催收短信
