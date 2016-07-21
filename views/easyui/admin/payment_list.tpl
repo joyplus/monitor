@@ -76,7 +76,7 @@
                     formatter: function(value,row, index){
 
                         var buttons = "";
-                        if (row.LovDelayStatus == 1 || row.LovDelayStatus == 2 || row.LovPaymentStatus == 0) {
+                        if (row.LovDelayStatus > 0 && row.LovPaymentStatus == 0) {
                             // 用户姓名
                             // 商户用户名
                             // 手机号码
