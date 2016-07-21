@@ -99,8 +99,8 @@ func CalcDuration(strPaymentDate string, strCurrentDate string) (duration int, e
 
 }
 
-//Gets payments by payment and delay status
-func GetPaymentsByStatus(merchantId int, paymentStatus int, delayStatus int) (payments []vo.PaymentVo, err error) {
+//Gets payments by payment status and delay status
+func GetPaymentsByStatus(merchantId int, paymentStatus int, delayStatus int, page int, page_size int) (payments []vo.PaymentVo, err error) {
 	o := orm.NewOrm()
 	qb, _ := orm.NewQueryBuilder("mysql")
 	qb.Select("payment.id, finorder.product_name,person.name,person.mobile_number, payment.lov_payment_status,payment.payment_date,payment.payment_amount,payment.payment_stage, payment.payment_number, payment.delay_payment_fine, payment.lov_delay_status, matrix.merchant_user_name")
@@ -109,26 +109,61 @@ func GetPaymentsByStatus(merchantId int, paymentStatus int, delayStatus int) (pa
 	qb.InnerJoin("fin_merchant_user_matrix as matrix").On("person.id=matrix.person_id").And("matrix.merchant_id=?")
 
 	var r orm.RawSeter
-
+	offset := (page -1) * page_size
 	if paymentStatus >= 0 && delayStatus >= 0 {
 		qb.Where("payment.lov_payment_status=?").And("payment.lov_delay_status=?")
 		qb.OrderBy("payment.payment_date").Asc()
+		qb.Limit(page_size)
+		qb.Offset(offset)
 		r = o.Raw(qb.String(), merchantId, paymentStatus, delayStatus)
 	} else if paymentStatus >= 0 {
 		qb.Where("payment.lov_payment_status=?")
 		qb.OrderBy("payment.payment_date").Asc()
+		qb.Limit(page_size)
+		qb.Offset(offset)
 		r = o.Raw(qb.String(), merchantId, paymentStatus)
 	} else if delayStatus >= 0 {
 		qb.Where("payment.lov_delay_status=?")
 		qb.OrderBy("payment.payment_date").Asc()
+		qb.Limit(page_size)
+		qb.Offset(offset)
 		r = o.Raw(qb.String(), merchantId, delayStatus)
 	} else {
 		beego.Debug("merchantId:", merchantId)
+		qb.Limit(page_size)
+		qb.Offset(offset)
 		r = o.Raw(qb.String(), merchantId)
 	}
 	r.QueryRows(&payments)
 
 	return
+}
+
+////Get the count of payments with condition merchant id, payment status and delay status
+func CountPaymentsByStatus(merchantId int, paymentStatus int, delayStatus int) (total int) {
+	o := orm.NewOrm()
+	qb, _ := orm.NewQueryBuilder("mysql")
+	qb.Select("count(*) as num")
+	qb.From("fin_payment as payment").InnerJoin("fin_person as person").On("payment.person_id=person.id")
+	qb.InnerJoin("fin_order as finorder").On("payment.order_id=finorder.id")
+	qb.InnerJoin("fin_merchant_user_matrix as matrix").On("person.id=matrix.person_id").And("matrix.merchant_id=?")
+
+	var r orm.RawSeter
+	if paymentStatus > 0 && delayStatus > 0 {
+		qb.Where("payment.lov_payment_status=?").And("payment.lov_delay_status=?")
+		r = o.Raw(qb.String(), merchantId, paymentStatus, delayStatus)
+	} else if paymentStatus > 0 {
+		qb.Where("payment.lov_payment_status=?")
+		r = o.Raw(qb.String(), merchantId, paymentStatus)
+	} else if delayStatus > 0 {
+		qb.Where("payment.lov_delay_status=?")
+		r = o.Raw(qb.String(), merchantId, delayStatus)
+	} else {
+		r = o.Raw(qb.String(), merchantId)
+	}
+	r.QueryRow(&total)
+
+	return total
 }
 
 func GetPaymentById(paymentId string)  (paymentvo vo.PaymentVo, err error){

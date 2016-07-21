@@ -11,7 +11,7 @@
             title:'账单列表',
             url:URL+"/getlist",
             method:'POST',
-            pagination:false,
+            pagination:true,
             fitColumns:true,
             striped:true,
             rownumbers:true,
@@ -76,7 +76,7 @@
                     formatter: function(value,row, index){
 
                         var buttons = "";
-                        if (row.LovDelayStatus == 1 || row.LovDelayStatus == 2 || row.LovPaymentStatus == 0) {
+                        if (row.LovDelayStatus > 0 && row.LovPaymentStatus == 0) {
                             // 用户姓名
                             // 商户用户名
                             // 手机号码
@@ -114,7 +114,7 @@
 
 		var paymentStatusVal = $("#paymentstatusid").combobox('getValue');
 		var delayStatusVal = $("#delaystatusid").combobox('getValue');
-        $("#datagrid").datagrid("reload", {paymentStatus:paymentStatusVal, delayStatus:delayStatusVal});
+        $("#datagrid").datagrid("reload", {paymentStatus:paymentStatusVal, delayStatus:delayStatusVal, page:1});
     }
 
     //发送催收短信
